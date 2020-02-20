@@ -8,3 +8,9 @@ export function getFilmsFromApiWithSearchedText (text: string, page: number) {
         .then((response) => response.json())
         .catch((error) => console.error(error))
 }
+
+export function getFilmDetail (id: number) {
+    return fetch('https://api.themoviedb.org/3/movie/' + id + '?api_key=' + API_TOKEN + '&language=fr')
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
+}

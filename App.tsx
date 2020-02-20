@@ -10,10 +10,14 @@ import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Navigation from "./app/navigation/Navigation";
+import {Provider} from 'react-redux'
+import Store from "./app/store/configureStore";
 
 const App: () => Component = () => {
 	return (
-		<Navigation/>
+		<Provider store={Store}>
+			<Navigation/>
+		</Provider>
 	);
 };
 

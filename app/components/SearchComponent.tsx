@@ -3,9 +3,10 @@ import React from 'react';
 import {Button, TextInput, View, StyleSheet, FlatList, Text, ActivityIndicator} from 'react-native';
 import FilmItem from "./FilmItem";
 import {getFilmsFromApiWithSearchedText} from "../api/TMDBApi";
-import {Colors} from "react-native/Libraries/NewAppScreen";
+import {connect} from "react-redux"
 
 class SearchComponent extends React.Component {
+
 	private searchedText: string;
 	private page: number;
 	private totalPages: number;
@@ -22,7 +23,7 @@ class SearchComponent extends React.Component {
 	}
 
 	render() {
-		console.log('RENDER')
+		//console.log(this.props)
 		return (
 			<View style={styles.main_container}>
 
@@ -40,7 +41,8 @@ class SearchComponent extends React.Component {
 					style={styles.flatList}
 					data={this.state.films}
 					keyExtractor={item => item.id.toString()}
-					renderItem={item => <FilmItem film={item}/>}
+					renderItem={item => <FilmItem film={item}
+												  displayFilmDetailAction={this._displayDetailForFilm} isFavorite={false} />}
 					onEndReachedThreshold={0.5}
 					onEndReached={info => this._loadFilms()}
 				/>
@@ -77,13 +79,17 @@ class SearchComponent extends React.Component {
 		if (this.searchedText.length > 0 && this.page <= this.totalPages) {
 			this.setState({isLoading: true})
 			getFilmsFromApiWithSearchedText(this.searchedText, this.page + 1).then(data => {
-				console.log('SEARCH PAGE ' + data.page + ' ON ' + data.total_pages)
+				// console.log('SEARCH PAGE ' + data.page + ' ON ' + data.total_pages)
 				this.page = data.page
 				this.totalPages = data.total_pages// taille de la scroll pas bonne ? ken le
 				this.setState({films: [...this.state.films, ...data.results], isLoading: false})
 			})
 
 		}
+	}
+
+	_displayDetailForFilm = (idFilm: String) => {
+		this.props.navigation.navigate('FilmDetail', {idFilm:idFilm})
 	}
 
 }
@@ -114,4 +120,16 @@ const styles = StyleSheet.create({
 })
 
 
-export default SearchComponent;
+// Redux
+
+const mapDispatchToProps = {};
+
+const mapStateToProps = (state:any) => {
+	return {};
+};
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(SearchComponent);
+
